@@ -36,6 +36,9 @@
                   :type="getTagType(tag)"
                   >{{ tag }}</el-tag
                 >
+                <el-button type="primary" block @click="goDetial"
+                  >详情</el-button
+                >
               </div>
             </el-col>
           </el-row>
@@ -66,6 +69,11 @@ export default {
     };
   },
   methods: {
+    goDetial() {
+      this.$router.push({
+        name: "EventTimeline",
+      });
+    },
     getTagType(tag) {
       if (tag === "正面") return "success";
       if (tag === "负面") return "danger";
