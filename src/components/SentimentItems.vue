@@ -1,49 +1,42 @@
 <template>
   <div>
     <el-row :gutter="20">
-      <el-col :span="24" v-for="item in sentimentData" :key="item.id">
-        <el-card shadow="hover">
-          <!-- 标题 -->
-          <div slot="header" class="clearfix">
-            <span>{{ item.title }}</span>
-          </div>
-          <!-- 简介 -->
-          <div>
-            <p>{{ item.description }}</p>
-          </div>
-          <el-row type="flex" justify="space-between">
-            <!-- 来源、涉及词、相似文章 -->
-            <el-col :span="18">
-              <div class="info-row">
-                <span><strong>来源：</strong>{{ item.source }}</span>
-                <span
-                  ><strong>涉及词：</strong>{{ item.keywords.join(", ") }}</span
-                >
-                <span>
+      <el-card shadow="hover">
+        <!-- 标题 -->
+        <div slot="header" class="clearfix">
+          <span>{{ keyword.keyword }}</span>
+        </div>
+        <!-- 简介 -->
+        <div>
+          <p>{{ keyword.representativeEvent.description }}</p>
+        </div>
+        <el-row type="flex" justify="space-between">
+          <!-- 来源、涉及词、相似文章 -->
+          <el-col :span="18">
+            <div class="info-row">
+              <!-- <span><strong>来源：</strong>{{ keyword.source }}</span> -->
+              <span><strong>涉及词：</strong>{{ keyword.keyword }}</span>
+              <!-- <span>
                   <strong>相似文章：</strong>
-                  <a :href="item.similarArticleLink">{{
-                    item.similarArticle
+                  <a :href="keyword.similarArticleLink">{{
+                    keyword.similarArticle
                   }}</a>
-                </span>
-              </div>
-            </el-col>
-            <!-- 情感分析 -->
-            <el-col :span="6">
-              <div>
-                <el-tag
-                  v-for="tag in item.tags"
-                  :key="tag"
-                  :type="getTagType(tag)"
-                  >{{ tag }}</el-tag
-                >
-                <el-button type="primary" block @click="goDetial"
-                  >详情</el-button
-                >
-              </div>
-            </el-col>
-          </el-row>
-        </el-card>
-      </el-col>
+                </span> -->
+            </div>
+          </el-col>
+          <!-- 情感分析 -->
+          <el-col :span="6">
+            <div>
+              <el-tag :type="getTagType(keyword.representativeEvent.sentiment)">
+                {{ getSentimentLabel(keyword.representativeEvent.sentiment) }}
+              </el-tag>
+              <el-button type="primary" block @click="goDetial(keyword.id)"
+                >详情</el-button
+              >
+            </div>
+          </el-col>
+        </el-row>
+      </el-card>
     </el-row>
   </div>
 </template>
@@ -51,33 +44,37 @@
 <script>
 export default {
   name: "SentimentItems",
-  data() {
-    return {
-      sentimentData: [
-        {
-          id: 1,
-          title: "示例标题1",
-          description: "这里是关于示例标题1的简介内容。",
-          source: "来源1",
-          keywords: ["关键词1", "关键词2"],
-          similarArticle: "相似文章标题1",
-          similarArticleLink: "#",
-          tags: ["正面", "负面"],
-        },
-        // 更多数据...
-      ],
-    };
+  props: {
+    keyword: {
+      type: Object,
+      required: true,
+    },
   },
   methods: {
-    goDetial() {
+    goDetial(keywordId) {
+      // 跳转到 EventTimeline 页面并传递 keywordId
       this.$router.push({
         name: "EventTimeline",
+        params: { keywordId: keywordId },
       });
     },
-    getTagType(tag) {
-      if (tag === "正面") return "success";
-      if (tag === "负面") return "danger";
-      return "warning"; // 中性
+    getTagType(sentiment) {
+      if (sentiment >= 0.7 && sentiment <= 1) {
+        return "success"; // 正面
+      } else if (sentiment >= 0 && sentiment < 0.3) {
+        return "danger"; // 负面
+      } else {
+        return "warning"; // 中性
+      }
+    },
+    getSentimentLabel(sentiment) {
+      if (sentiment >= 0.7 && sentiment <= 1) {
+        return "正面";
+      } else if (sentiment >= 0 && sentiment < 0.3) {
+        return "负面";
+      } else {
+        return "中性";
+      }
     },
   },
 };

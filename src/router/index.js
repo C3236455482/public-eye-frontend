@@ -11,7 +11,8 @@ export default new Router({
         {
             path: '/',
             name: 'HomePage',
-            component: HomePage
+            component: HomePage,
+            props: true,
         },
         // 更多路由可以在这里添加
         {
