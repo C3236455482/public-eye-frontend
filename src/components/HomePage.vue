@@ -1,42 +1,59 @@
 <template>
-  <div id="app">
-    <public-eye-sidebar></public-eye-sidebar>
-    <el-row class="main-content">
-      <el-col :span="16" :offset="4">
-        <!-- 动态渲染多个 SentimentItems 组件 -->
-        <el-col v-for="keyword in keywordsList" :key="keyword.id" :span="24">
-          <sentiment-items :keyword="keyword"></sentiment-items>
-        </el-col>
-      </el-col>
+  <div id="app" class="app-container">
+    <!-- 侧边栏组件 -->
+    <public-eye-sidebar class="sidebar"></public-eye-sidebar>
 
-      <el-col :span="4">
-        <!-- 右侧空间，可以添加更多组件或内容 -->
-      </el-col>
-    </el-row>
-    <!-- 分页组件 -->
-    <el-pagination
-      @size-change="handleSizeChange"
-      @current-change="handleCurrentChange"
-      :current-page="currentPage"
-      :page-sizes="[10, 20, 30, 40]"
-      :page-size="pageSize"
-      layout="total, sizes, prev, pager, next"
-      :total="totalItems"
-      style="text-align: center; margin-top: 20px"
-    >
-    </el-pagination>
+    <div class="right-content">
+      <!-- 导航栏组件 -->
+      <navbar></navbar>
+
+      <el-row class="main-content">
+        <!-- 过滤 -->
+        <filter-panel></filter-panel>
+
+        <br />
+
+        <el-col :span="16" :offset="1">
+          <el-col v-for="keyword in keywordsList" :key="keyword.id" :span="24">
+            <sentiment-items :keyword="keyword"></sentiment-items>
+          </el-col>
+        </el-col>
+
+        <el-col :span="4">
+          <!-- 右侧空间，可以添加更多组件或内容 -->
+        </el-col>
+      </el-row>
+      <!-- 分页组件 -->
+      <el-pagination
+        @size-change="handleSizeChange"
+        @current-change="handleCurrentChange"
+        :current-page="currentPage"
+        :page-sizes="[10, 20, 30, 40]"
+        :page-size="pageSize"
+        layout="total, sizes, prev, pager, next"
+        :total="totalItems"
+        style="text-align: center; margin-top: 20px"
+      >
+      </el-pagination>
+
+      <br />
+    </div>
   </div>
 </template>
 
 <script>
 import axios from "axios";
-import PublicEyeSidebar from "./PublicEyeSidebar.vue"; // 组件路径根据实际位置调整
-import SentimentItems from "./SentimentItems.vue"; // 导入 SentimentItems 组件
+import Navbar from "./Navbar.vue";
+import PublicEyeSidebar from "./PublicEyeSidebar.vue";
+import FilterPanel from "./FilterPanel.vue";
+import SentimentItems from "./SentimentItems.vue";
 
 export default {
   name: "HomePage",
   components: {
+    Navbar, // 引入 Navbar 组件
     SentimentItems, // 引入子组件
+    FilterPanel, // 引入过滤面板组件
     PublicEyeSidebar, // 引入侧边栏组件
   },
   data() {
@@ -86,9 +103,43 @@ export default {
 </script>
 
 <style>
-/* 假设主内容区域在 App.vue 或其他文件中定义 */
+/* 整体布局，左侧是侧边栏，右侧是导航栏和主内容 */
+.app-container {
+  background-color: #eef5f9;
+  display: flex;
+  height: 100vh; /* 占满整个视窗高度 */
+}
+
+/* 左侧全屏侧边栏 */
+.sidebar {
+  width: 250px;
+  box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+  overflow-y: auto; /* 如果侧边栏内容很多，可以滚动 */
+}
+
+/* 右侧区域，包含导航栏和内容 */
+.right-content {
+  margin-left: 200px; /* 与侧边栏宽度相同 */
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1; /* 右侧区域填充剩余空间 */
+}
+
+/* 顶部导航栏 */
+.navbar {
+  position: fixed;
+  top: 0;
+  right: 0;
+  left: 200px;
+  height: 40px;
+  z-index: 1000;
+  background-color: #f1f3f5;
+  padding: 10px;
+}
+
+/* 主内容区域 */
 .main-content {
-  margin-left: 300px; /* 与侧边栏宽度相同 */
-  margin-right: 20px; /* 添加右侧间隔 */
+  margin-top: 100px; /* 顶部导航栏高度 */
+  background-color: #f1f3f5;
 }
 </style>

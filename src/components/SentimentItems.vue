@@ -55,7 +55,7 @@ export default {
       // 跳转到 EventTimeline 页面并传递 keywordId
       this.$router.push({
         name: "EventTimeline",
-        params: { keywordId: keywordId },
+        params: { keywordId: keywordId, keyword: this.keyword.keyword },
       });
     },
     getTagType(sentiment) {
@@ -82,7 +82,7 @@ export default {
 
 <style scoped>
 .el-card {
-  margin-bottom: 20px; /* 为卡片间添加一些间距 */
+  margin-bottom: 10px; /* 为卡片间添加一些间距 */
 }
 .el-col {
   padding: 0 !important; /* 移除内部默认填充 */

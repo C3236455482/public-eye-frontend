@@ -1,15 +1,27 @@
 <template>
   <el-aside
-    width="300px"
+    width="200px"
     class="fixed-sidebar"
     style="background-color: #1f2d3d; color: white"
   >
     <div
       class="brand"
-      style="padding: 20px; font-size: 24px; font-weight: bold"
+      style="
+        padding: 20px;
+        font-size: 19px;
+        font-weight: bold;
+        display: flex;
+        align-items: center;
+      "
     >
-      PublicEye
+      <img
+        src="http://www.sinaimg.cn/blog/developer/wiki/LOGO_64x64.png"
+        alt="微博图标"
+        style="width: 24px; height: 24px; margin-right: 10px"
+      />
+      微博舆情分析
     </div>
+
     <el-menu
       default-active="2"
       class="el-menu-vertical-demo"
@@ -18,8 +30,8 @@
       active-text-color="#409EFF"
     >
       <el-submenu index="1">
-        <template #title><i class="el-icon-s-platform"></i> Projects</template>
-        <el-menu-item index="1-1">Rainbow</el-menu-item>
+        <template #title><i class="el-icon-s-platform"></i> 舆情分析</template>
+        <!-- <el-menu-item index="1-1">Rainbow</el-menu-item> -->
       </el-submenu>
       <el-submenu index="2">
         <template #title><i class="el-icon-document"></i> Reports</template>

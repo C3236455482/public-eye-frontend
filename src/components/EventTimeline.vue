@@ -7,7 +7,7 @@
       style="background-color: #1f2d3d; color: white"
     >
       <div class="header-content">
-        <span class="header-title">示例标题1详情</span>
+        <span class="header-title">{{ this.keyword }}</span>
         <el-button class="return-button" type="primary" @click="goBack">
           返回
         </el-button>
@@ -79,6 +79,10 @@ export default {
   name: "EventTimeline",
   props: {
     keywordId: {
+      type: String,
+      required: true,
+    },
+    keyword: {
       type: String,
       required: true,
     },
