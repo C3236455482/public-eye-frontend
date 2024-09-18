@@ -1,26 +1,31 @@
 <template>
   <div id="app" class="app-container">
-    <!-- 侧边栏组件 -->
-    <public-eye-sidebar class="sidebar"></public-eye-sidebar>
+    <!-- 左侧侧边栏 -->
+    <div class="sidebar">
+      <public-eye-sidebar></public-eye-sidebar>
+    </div>
 
-    <div class="right-content">
-      <!-- 导航栏组件 -->
+    <!-- 顶部导航栏 -->
+    <div class="navbar">
       <navbar></navbar>
+    </div>
 
-      <el-row class="main-content">
-        <!-- 过滤 -->
-        <filter-panel></filter-panel>
+    <!-- 右侧搜索栏 -->
+    <div class="search-sidebar">
+      <search-filter-bar @search="handleSearch"></search-filter-bar>
+    </div>
 
-        <br />
+    <div class="main-content">
+      <el-row>
+        <!-- 过滤面板 -->
+        <el-col :span="24">
+          <filter-panel></filter-panel>
+        </el-col>
 
-        <el-col :span="16" :offset="1">
+        <el-col :span="24" class="content">
           <el-col v-for="keyword in keywordsList" :key="keyword.id" :span="24">
             <sentiment-items :keyword="keyword"></sentiment-items>
           </el-col>
-        </el-col>
-
-        <el-col :span="4">
-          <!-- 右侧空间，可以添加更多组件或内容 -->
         </el-col>
       </el-row>
       <!-- 分页组件 -->
@@ -46,6 +51,7 @@ import axios from "axios";
 import Navbar from "./Navbar.vue";
 import PublicEyeSidebar from "./PublicEyeSidebar.vue";
 import FilterPanel from "./FilterPanel.vue";
+import SearchFilterBar from "./SearchFilterBar.vue";
 import SentimentItems from "./SentimentItems.vue";
 
 export default {
@@ -54,6 +60,7 @@ export default {
     Navbar, // 引入 Navbar 组件
     SentimentItems, // 引入子组件
     FilterPanel, // 引入过滤面板组件
+    SearchFilterBar, // 引入搜索过滤栏组件
     PublicEyeSidebar, // 引入侧边栏组件
   },
   data() {
@@ -62,6 +69,9 @@ export default {
       currentPage: 1, // 当前页码
       pageSize: 10, // 每页条数
       totalItems: 0, // 总记录数
+      searchParams: {
+        query: "", // 搜索关键词
+      }, // 搜索参数
     };
   },
   mounted() {
@@ -75,6 +85,7 @@ export default {
           params: {
             page: this.currentPage, // 当前页
             size: this.pageSize, // 每页大小
+            query: this.searchParams.query,
           },
         });
         if (response.data.code === 1) {
@@ -98,6 +109,10 @@ export default {
       this.currentPage = page;
       this.fetchKeywordsList();
     },
+    handleSearch(searchParams) {
+      this.searchParams = searchParams;
+      this.fetchKeywordsList();
+    },
   },
 };
 </script>
@@ -105,41 +120,59 @@ export default {
 <style>
 /* 整体布局，左侧是侧边栏，右侧是导航栏和主内容 */
 .app-container {
+  display: grid;
+  grid-template-areas:
+    "sidebar navbar navbar"
+    "sidebar main-content search-sidebar";
+  grid-template-columns: 210px 1fr 300px;
+  grid-template-rows: 40px 1fr;
   background-color: #eef5f9;
-  display: flex;
   height: 100vh; /* 占满整个视窗高度 */
 }
 
 /* 左侧全屏侧边栏 */
 .sidebar {
-  width: 250px;
+  grid-area: sidebar;
   box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
   overflow-y: auto; /* 如果侧边栏内容很多，可以滚动 */
-}
-
-/* 右侧区域，包含导航栏和内容 */
-.right-content {
-  margin-left: 200px; /* 与侧边栏宽度相同 */
-  display: flex;
-  flex-direction: column;
-  flex-grow: 1; /* 右侧区域填充剩余空间 */
+  height: 100%;
+  padding: 20px;
 }
 
 /* 顶部导航栏 */
 .navbar {
-  position: fixed;
+  grid-area: navbar;
+  background-color: #f1f3f5;
+  position: fixed; /* 固定在顶部 */
+  /* 手动计算，静态配置 */
   top: 0;
+  left: 200px; /* 确保导航栏与侧边栏对齐 */
   right: 0;
-  left: 200px;
   height: 40px;
   z-index: 1000;
-  background-color: #f1f3f5;
-  padding: 10px;
 }
 
 /* 主内容区域 */
 .main-content {
-  margin-top: 100px; /* 顶部导航栏高度 */
-  background-color: #f1f3f5;
+  grid-area: main-content;
+  /* 手动计算，静态配置 */
+  top: 60px;
+  left: 300px; /* 确保导航栏与侧边栏对齐 */
+}
+
+.content {
+  top: 300px;
+  left: 300px; /* 确保导航栏与侧边栏对齐 */
+}
+
+.search-sidebar {
+  grid-area: search-sidebar;
+  background-color: #fff;
+  position: fixed; /* 固定 */
+  /* 手动计算，静态配置 */
+  top: 60px;
+  right: 0;
+  overflow-y: auto;
+  height: 100%;
 }
 </style>
