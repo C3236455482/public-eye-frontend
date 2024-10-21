@@ -16,18 +16,26 @@
     </div>
 
     <div class="main-content">
-      <el-row>
+      <el-row :gutter="0">
         <!-- 过滤面板 -->
-        <el-col :span="24">
+        <el-col :span="24" class="filter-panel">
           <filter-panel></filter-panel>
         </el-col>
 
+        <!-- 内容区域 -->
         <el-col :span="24" class="content">
-          <el-col v-for="keyword in keywordsList" :key="keyword.id" :span="24">
-            <sentiment-items :keyword="keyword"></sentiment-items>
-          </el-col>
+          <el-row>
+            <el-col
+              v-for="keyword in keywordsList"
+              :key="keyword.id"
+              :span="24"
+            >
+              <sentiment-items :keyword="keyword"></sentiment-items>
+            </el-col>
+          </el-row>
         </el-col>
       </el-row>
+
       <!-- 分页组件 -->
       <el-pagination
         @size-change="handleSizeChange"
@@ -81,7 +89,7 @@ export default {
   methods: {
     async fetchKeywordsList() {
       try {
-        const response = await axios.get(`/api/keywords/list`, {
+        const response = await axios.get(`/api/keyword/list`, {
           params: {
             page: this.currentPage, // 当前页
             size: this.pageSize, // 每页大小
@@ -118,22 +126,34 @@ export default {
 </script>
 
 <style>
+html,
+body {
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  box-sizing: border-box;
+  background-color: #eef5f9; /* 设置背景色 */
+  min-height: 100%; /* 确保背景色撑满页面 */
+}
+
 /* 整体布局，左侧是侧边栏，右侧是导航栏和主内容 */
 .app-container {
   display: grid;
   grid-template-areas:
     "sidebar navbar navbar"
     "sidebar main-content search-sidebar";
-  grid-template-columns: 210px 1fr 300px;
+  grid-template-columns: 220px 1fr 300px;
   grid-template-rows: 40px 1fr;
   background-color: #eef5f9;
   height: 100vh; /* 占满整个视窗高度 */
+  grid-gap: 20px;
+  row-gap: 20px;
 }
 
 /* 左侧全屏侧边栏 */
 .sidebar {
   grid-area: sidebar;
-  box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+  /* box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1); */
   overflow-y: auto; /* 如果侧边栏内容很多，可以滚动 */
   height: 100%;
   padding: 20px;
@@ -150,22 +170,40 @@ export default {
   right: 0;
   height: 40px;
   z-index: 1000;
+  margin-bottom: 20px;
 }
 
 /* 主内容区域 */
 .main-content {
+  width: 100%;
   grid-area: main-content;
+  padding: 0;
   /* 手动计算，静态配置 */
   top: 60px;
   left: 300px; /* 确保导航栏与侧边栏对齐 */
 }
 
 .content {
+  width: 100%;
+  padding: 0;
   top: 300px;
   left: 300px; /* 确保导航栏与侧边栏对齐 */
 }
 
+.filter-panel,
+.sentiment-items {
+  width: 100%; /* 确保占满父容器 */
+  padding: 0; /* 移除不必要的内边距 */
+  margin: 0; /* 移除不必要的外边距 */
+}
+
+.filter-panel {
+  margin-top: 40px;
+  margin-bottom: 40px; /* 过滤面板与主内容之间添加20px的空隙 */
+}
+
 .search-sidebar {
+  margin-top: 20px;
   grid-area: search-sidebar;
   background-color: #fff;
   position: fixed; /* 固定 */

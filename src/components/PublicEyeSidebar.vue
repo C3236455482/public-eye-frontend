@@ -29,12 +29,11 @@
       text-color="#fff"
       active-text-color="#409EFF"
     >
-      <el-submenu index="1">
-        <template #title><i class="el-icon-s-platform"></i> 舆情分析</template>
-        <!-- <el-menu-item index="1-1">Rainbow</el-menu-item> -->
-      </el-submenu>
+      <el-menu-item index="1">
+        <i class="el-icon-s-platform"></i> 舆情分析
+      </el-menu-item>
       <el-submenu index="2">
-        <template #title><i class="el-icon-document"></i> Reports</template>
+        <template #title><i class="el-icon-document"></i> 导出报告</template>
         <el-menu-item index="2-1">Email reports</el-menu-item>
         <el-menu-item index="2-2">PDF report</el-menu-item>
         <el-menu-item index="2-3">Excel report</el-menu-item>

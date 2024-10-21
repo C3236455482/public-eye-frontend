@@ -120,9 +120,12 @@ export default {
 
 <style scoped>
 .filter-container {
+  max-width: 1820px;
+  width: 100%;
+  height: auto; /* 高度自适应内容 */
   background-color: #fff;
   border: 1px solid #e0e0e0;
-  padding: 20px;
+  padding: 15px;
   border-radius: 1px;
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
 }
